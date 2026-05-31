@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="copyright" content="The Unlicense">
+  <meta name="author" content="girl-dream">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="./favicon.ico" type="image/x-icon">
+  <title>网络计算器</title>
+  <style>
+    :root {
+      --title: #000;
+      --bg: #F6F7F8;
+      --text: #555;
+      --form-bg: #F6F7F8;
+      --input--bg: transparent;
+      --form-border: #ccc;
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --title: #fff;
+        --bg: #0A0B0C;
+        --text: #E7E9EB;
+        --form-bg: #101011;
+        --form-border: #2F3134;
+        --input--bg: #232527;
+        --input--text: #A2A7AE;
+      }
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      padding: 20px;
+      margin: 0 auto;
+      background: var(--bg);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      justify-items: center;
+      align-items: center;
+    }
+
+    h1 {
+      text-align: center;
+      margin: 20px;
+      color: var(--title);
+    }
+
+    form {
+      border: 1px solid var(--form-border);
+      border-radius: 5px;
+      padding: 10px;
+      background: var(--form-bg);
+    }
+
+    form>div {
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    form label {
+      display: inline-block;
+      width: 5rem;
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    form input {
+      width: 4rem;
+      padding: 6px 6px;
+      border: 1px solid #2F3134;
+      border-radius: 4px;
+      text-align: center;
+      font-size: 0.9rem;
+      background-color: var(--input--bg);
+      color: var(--input--text);
+    }
+
+    form input:focus-visible {
+      outline: none;
+      border-color: #4a6cf7;
+    }
+
+    form input[readonly] {
+      background: var(--input--bg);
+      color: var(--input--text);
+      font-weight: 500;
+    }
+
+    input[type="button"] {
+      cursor: pointer;
+      background: #4a6cf7;
+      color: white;
+      padding: 8px 16px;
+      font-weight: 600;
+      border-radius: 6px;
+      border: none;
+    }
+
+    input[type="button"]:hover {
+      background: #3b5de7;
+    }
+
+    #calcBtn {
+      margin-left: 2rem;
+    }
+
+    .mask-text {
+      margin: 0 4px;
+      font-size: 0.9rem;
+      color: var(--text);
+    }
+
+    #availableIPs {
+      width: 7rem;
+    }
+
+    #calcBtnTwo {
+      margin-left: 7rem;
+    }
+
+    #calcBtnThree {
+      margin-left: 1.5rem;
+    }
+
+    .items {
+      width: 550px;
+    }
+  </style>
+</head>
+
+<body>
+  <!-- 网络和IP地址计算器 -->
+  <div class="items">
+    <h1>网络和IP地址计算器</h1>
+    <form id="ipForm">
+      <div id="ip_address">
+        <label>输入IP</label>
+        <input type="number" min="0" max="255" value="192">
+        <span class="mask-text">.</span>
+        <input type="number" min="0" max="255" value="168">
+        <span class="mask-text">.</span>
+        <input type="number" min="0" max="255" value="0">
+        <span class="mask-text">.</span>
+        <input type="number" min="0" max="255" value="1">
+        <span class="mask-text">/</span>
+        <input type="number" min="0" max="32" value="24" style="width:45px">
+        <input type="button" value="计算" id="calcBtn">
+        <input type="button" value="清空" id="clearBtn">
+      </div>
+      <div><label>可用IP数</label> <input type="number" readonly id="availableIPs"></div>
+      <div><label>掩码</label>
+        <input type="number" readonly id="mask1">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="mask2">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="mask3">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="mask4">
+      </div>
+      <div><label>网络位</label>
+        <input type="number" readonly id="net1">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="net2">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="net3">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="net4">
+      </div>
+      <div><label>第一可用</label>
+        <input type="number" readonly id="first1">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="first2">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="first3">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="first4">
+      </div>
+      <div><label>最后可用</label>
+        <input type="number" readonly id="last1">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="last2">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="last3">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="last4">
+      </div>
+      <div><label>广播地址</label>
+        <input type="number" readonly id="broad1">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="broad2">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="broad3">
+        <span class="mask-text">.</span>
+        <input type="number" readonly id="broad4">
+      </div>
+    </form>
+  </div>
+  <!-- 子网掩码转换器 -->
+  <div class="items">
+    <h1>子网掩码转换器</h1>
+    <form id="maskForm">
+      <div>
+        <label>掩码</label>
+        <input type="number" max="32" min="1" value="24" id="mask">
+        <input type="button" value="计算" id="calcBtnTwo">
+        <input type="button" value="清空" id="clearBtnTwo">
+      </div>
+      <div id="maskForm_dec">
+        <label>十进制</label>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+      </div>
+      <div id="maskForm_hex">
+        <label>十六进制</label>
+        <input type="text" readonly>
+        <span class="mask-text">.</span>
+        <input type="text" readonly>
+        <span class="mask-text">.</span>
+        <input type="text" readonly>
+        <span class="mask-text">.</span>
+        <input type="text" readonly>
+      </div>
+    </form>
+  </div>
+  <!-- 子网掩码逆算器 -->
+  <div class="items">
+    <h1>子网掩码逆算器</h1>
+    <form id="maskForm_reverse">
+      <div>
+        <label>子网掩码</label>
+        <input type="number" max="255" min="0">
+        <span class="mask-text">.</span>
+        <input type="number" max="255" min="0">
+        <span class="mask-text">.</span>
+        <input type="number" max="255" min="0">
+        <span class="mask-text">.</span>
+        <input type="number" max="255" min="0">
+      </div>
+      <div>
+        <label>逆算掩码</label>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+        <span class="mask-text">.</span>
+        <input type="number" readonly>
+      </div>
+      <div>
+        <input type="button" value="计算" id="calcBtnThree">
+        <input type="button" value="清空" id="clearBtnThree">
+      </div>
+    </form>
+  </div>
+  <script type="text/javascript">
+    const form = document.getElementById('ipForm')
+    const clearBtn = document.getElementById('clearBtn')
+    const calcBtn = document.getElementById('calcBtn')
+
+    clearBtn.onclick = () => {
+      form.reset()
+      ip_address.querySelectorAll('input[type="number"]').forEach(e => e.value = '')
+    }
+
+    calcBtn.onclick = () => {
+      const ipInputs = form.querySelectorAll('div:first-child input[type="number"]')
+      const ipParts = []
+      for (let i = 0; i < 4; i++) {
+        const val = parseInt(ipInputs[i].value)
+        if (isNaN(val) || val < 0 || val > 255) {
+          alert(`IP地址第${i + 1}段无效,请输入0-255之间的数字`)
+          ipInputs[i].focus()
+          return
+        }
+        ipParts.push(val)
+      }
+
+      // 获取掩码位
+      const maskBits = parseInt(ipInputs[4].value)
+      if (isNaN(maskBits) || maskBits < 0 || maskBits > 32) {
+        alert('掩码位无效,请输入0-32之间的数字')
+        ipInputs[4].focus()
+        return
+      }
+
+      // 计算网络信息
+      const result = calculateNetwork(ipParts, maskBits)
+
+      // 填充结果
+      document.getElementById('availableIPs').value = result.availableIPs
+
+      // 填充子网掩码
+      document.getElementById('mask1').value = result.mask[0]
+      document.getElementById('mask2').value = result.mask[1]
+      document.getElementById('mask3').value = result.mask[2]
+      document.getElementById('mask4').value = result.mask[3]
+
+      // 填充网络地址
+      document.getElementById('net1').value = result.network[0]
+      document.getElementById('net2').value = result.network[1]
+      document.getElementById('net3').value = result.network[2]
+      document.getElementById('net4').value = result.network[3]
+
+      // 填充第一个可用IP
+      document.getElementById('first1').value = result.firstHost[0]
+      document.getElementById('first2').value = result.firstHost[1]
+      document.getElementById('first3').value = result.firstHost[2]
+      document.getElementById('first4').value = result.firstHost[3]
+
+      // 填充最后一个可用IP
+      document.getElementById('last1').value = result.lastHost[0]
+      document.getElementById('last2').value = result.lastHost[1]
+      document.getElementById('last3').value = result.lastHost[2]
+      document.getElementById('last4').value = result.lastHost[3]
+
+      // 填充广播地址
+      document.getElementById('broad1').value = result.broadcast[0]
+      document.getElementById('broad2').value = result.broadcast[1]
+      document.getElementById('broad3').value = result.broadcast[2]
+      document.getElementById('broad4').value = result.broadcast[3]
+    }
+
+    // ========== IP计算核心函数 ==========
+    function calculateNetwork(ip, maskBits) {
+      // 将IP转为32位整数
+      const ipInt = (ip[0] << 24) | (ip[1] << 16) | (ip[2] << 8) | ip[3]
+
+      // 计算子网掩码
+      const maskInt = maskBits === 0 ? 0 : (~0 << (32 - maskBits)) >>> 0
+
+      // 网络地址
+      const networkInt = (ipInt & maskInt) >>> 0
+
+      // 广播地址
+      const broadcastInt = (networkInt | (~maskInt >>> 0)) >>> 0
+
+      // 可用IP数量
+      const availableIPs = maskBits >= 31 ? (maskBits === 32 ? 1 : 2) : Math.pow(2, 32 - maskBits) - 2
+
+      // 第一个可用IP
+      const firstHostInt = maskBits >= 31 ? networkInt : ((networkInt + 1) >>> 0)
+
+      // 最后一个可用IP
+      const lastHostInt = maskBits >= 31 ? broadcastInt : ((broadcastInt - 1) >>> 0)
+
+      return {
+        mask: intToIP(maskInt),
+        network: intToIP(networkInt),
+        firstHost: intToIP(firstHostInt),
+        lastHost: intToIP(lastHostInt),
+        broadcast: intToIP(broadcastInt),
+        availableIPs: availableIPs
+      }
+    }
+
+    // 整数转IP地址数组
+    function intToIP(int) {
+      return [
+        (int >>> 24) & 255,
+        (int >>> 16) & 255,
+        (int >>> 8) & 255,
+        int & 255
+      ]
+    }
+  </script>
+  <script type="text/javascript">
+    const maskForm = document.getElementById('maskForm')
+    const calcBtnTwo = document.getElementById('calcBtnTwo')
+    const clearBtnTwo = document.getElementById('clearBtnTwo')
+
+    const mask = document.getElementById('mask')
+
+    clearBtnTwo.onclick = () => {
+      maskForm.reset()
+      mask.value = ''
+    }
+
+    calcBtnTwo.onclick = () => {
+      const num = parseInt(mask.value)
+      if (isNaN(num) || num > 32 || num < 0) {
+        alert('长度必须在 0-32 之间')
+        return
+      }
+      const maskInt = num === 0 ? 0 : ((-1 << (32 - num)) >>> 0)
+
+      const parts = [
+        (maskInt >>> 24) & 0xFF,
+        (maskInt >>> 16) & 0xFF,
+        (maskInt >>> 8) & 0xFF,
+        maskInt & 0xFF
+      ]
+
+      document.getElementById('maskForm_dec').querySelectorAll('input').forEach((input, index) => {
+        input.value = parts[index]
+      })
+
+      const hex = maskInt.toString(16).toUpperCase().padStart(8, '0')
+      const hexs = hex.match(/.{2}/g)
+      document.getElementById('maskForm_hex').querySelectorAll('input').forEach((input, index) => {
+        input.value = hexs[index]
+      })
+    }
+  </script>
+  <script type="text/javascript">
+    const maskForm_reverse = document.getElementById('maskForm_reverse')
+    const calcBtnThree = document.getElementById('calcBtnThree')
+    const clearBtnThree = document.getElementById('clearBtnThree')
+
+    calcBtnThree.onclick = () => {
+      const temp = maskForm_reverse.getElementsByTagName('div')
+      const temp2 = temp[1].querySelectorAll('input')
+      const inputs = temp[0].querySelectorAll('input')
+
+      for (let i = 0; i < inputs.length; i++) {
+        const value = parseInt(inputs[i].value)
+
+        if (isNaN(value) || value < 0 || value > 255) {
+          alert(`第${i + 1}个输入无效,请输入0-255之间的数字`)
+          inputs[i].focus()
+          return
+        }
+      }
+
+      for (let i = 0; i < inputs.length; i++) {
+        temp2[i].value = 255 - inputs[i].value
+      }
+    }
+
+    clearBtnThree.onclick = () => {
+      maskForm_reverse.reset()
+    }
+  </script>
+</body>
+
+</html>
